@@ -5,8 +5,12 @@ function responsProc () {
     }
 }
 input.onButtonPressed(Button.A, function () {
-    radio.setGroup(radioGroup)
-    basic.showString("start")
+    if (targetList.length >= 0) {
+        mode = 1
+        radio.setGroup(radioGroup)
+        serial.writeLine("start")
+        basic.showString("start")
+    }
 })
 radio.onReceivedString(function (receivedString) {
     serial.writeLine(receivedString)
@@ -29,9 +33,11 @@ let point = 0
 let receivedCommand: string[] = []
 let radioGroup = 0
 let targetList: string[] = []
+let mode = 0
 serial.redirectToUSB()
 serial.setTxBufferSize(128)
 serial.setRxBufferSize(128)
+mode = 0
 let waitTime = 3000
 let dataValidTime = 5
 targetList = []
@@ -40,8 +46,11 @@ watchfont.showNumber2(radioGroup)
 radio.setGroup(0)
 radio.setTransmitPower(7)
 basic.forever(function () {
-    sendStrings = "" + targetList._pickRandom() + "," + "S" + "," + convertToText(waitTime) + "," + convertToText(dataValidTime)
-    radio.sendString(sendStrings)
-    serial.writeLine(sendStrings)
+    if (mode != 0) {
+        sendStrings = "" + targetList._pickRandom() + "," + "S" + "," + convertToText(waitTime) + "," + convertToText(dataValidTime)
+        radio.sendString(sendStrings)
+        serial.writeLine(sendStrings)
+        basic.pause(waitTime)
+    }
     basic.pause(waitTime)
 })
