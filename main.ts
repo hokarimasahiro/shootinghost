@@ -1,5 +1,5 @@
 function responsProc () {
-    if (receivedCommand[3].charAt(0) == "H") {
+    if (receivedCommand[1].charAt(0) == "H") {
         point += 1
         watchfont.showNumber2(point)
     }
