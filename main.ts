@@ -17,7 +17,7 @@ radio.onReceivedString(function (receivedString) {
     receivedCommand = receivedString.split(",")
     if (receivedCommand[0] == "CQ") {
         CQreceiveProc()
-    } else if (receivedCommand[0] == control.deviceName()) {
+    } else {
         responsProc()
     }
 })
