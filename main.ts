@@ -14,6 +14,7 @@ input.onButtonPressed(Button.A, function () {
 })
 function initProc () {
     mode = 0
+    point = 0
     targetList = []
     radio.setTransmitPower(7)
     radio.setGroup(0)
