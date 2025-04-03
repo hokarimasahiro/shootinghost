@@ -1,3 +1,6 @@
+radio.onReceivedNumber(function (receivedNumber) {
+    serial.writeNumber(receivedNumber)
+})
 function responsProc () {
     if (receivedCommand[1].charAt(0) == "H") {
         point += 1
@@ -20,6 +23,9 @@ radio.onReceivedString(function (receivedString) {
     } else {
         responsProc()
     }
+})
+radio.onReceivedValue(function (name, value) {
+    serial.writeValue(name, value)
 })
 function CQreceiveProc () {
     radio.sendString("" + receivedCommand[1] + "," + control.deviceName() + "," + convertToText(radioGroup))
