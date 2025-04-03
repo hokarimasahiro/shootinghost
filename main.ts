@@ -1,6 +1,3 @@
-radio.onReceivedNumber(function (receivedNumber) {
-    serial.writeNumber(receivedNumber)
-})
 function responsProc () {
     if (receivedCommand[1].charAt(0) == "H") {
         point += 1
@@ -12,9 +9,13 @@ input.onButtonPressed(Button.A, function () {
         mode = 1
         radio.setGroup(radioGroup)
         serial.writeLine("start")
-        basic.showString("start")
+        watchfont.showNumber2(0)
     }
 })
+function resetProc () {
+    radio.setGroup(radioGroup)
+    radio.sendString("" + control.deviceName() + "," + "RESET")
+}
 radio.onReceivedString(function (receivedString) {
     serial.writeLine(receivedString)
     receivedCommand = receivedString.split(",")
@@ -24,8 +25,9 @@ radio.onReceivedString(function (receivedString) {
         responsProc()
     }
 })
-radio.onReceivedValue(function (name, value) {
-    serial.writeValue(name, value)
+input.onButtonPressed(Button.B, function () {
+    resetProc()
+    watchfont.showNumber2(radioGroup)
 })
 function CQreceiveProc () {
     radio.sendString("" + receivedCommand[1] + "," + control.deviceName() + "," + convertToText(radioGroup))
@@ -48,9 +50,10 @@ let waitTime = 3000
 let dataValidTime = 5
 targetList = []
 radioGroup = Math.abs(control.deviceSerialNumber()) % 98 + 1
-watchfont.showNumber2(radioGroup)
-radio.setGroup(0)
 radio.setTransmitPower(7)
+resetProc()
+radio.setGroup(0)
+watchfont.showNumber2(radioGroup)
 basic.forever(function () {
     if (mode != 0) {
         sendStrings = "" + targetList._pickRandom() + "," + "S" + "," + convertToText(waitTime) + "," + convertToText(dataValidTime)
