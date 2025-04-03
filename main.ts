@@ -12,6 +12,13 @@ input.onButtonPressed(Button.A, function () {
         watchfont.showNumber2(0)
     }
 })
+function initProc () {
+    mode = 0
+    targetList = []
+    radio.setTransmitPower(7)
+    radio.setGroup(0)
+    watchfont.showNumber2(radioGroup)
+}
 function resetProc () {
     radio.setGroup(radioGroup)
     radio.sendString("" + control.deviceName() + "," + "RESET")
@@ -27,7 +34,7 @@ radio.onReceivedString(function (receivedString) {
 })
 input.onButtonPressed(Button.B, function () {
     resetProc()
-    watchfont.showNumber2(radioGroup)
+    initProc()
 })
 function CQreceiveProc () {
     radio.sendString("" + receivedCommand[1] + "," + control.deviceName() + "," + convertToText(radioGroup))
@@ -37,23 +44,19 @@ function CQreceiveProc () {
     }
 }
 let sendStrings = ""
+let mode = 0
+let targetList: string[] = []
 let point = 0
 let receivedCommand: string[] = []
 let radioGroup = 0
-let targetList: string[] = []
-let mode = 0
 serial.redirectToUSB()
 serial.setTxBufferSize(128)
 serial.setRxBufferSize(128)
-mode = 0
 let waitTime = 3000
 let dataValidTime = 5
-targetList = []
 radioGroup = Math.abs(control.deviceSerialNumber()) % 98 + 1
-radio.setTransmitPower(7)
 resetProc()
-radio.setGroup(0)
-watchfont.showNumber2(radioGroup)
+initProc()
 basic.forever(function () {
     if (mode != 0) {
         sendStrings = "" + targetList._pickRandom() + "," + "S" + "," + convertToText(waitTime) + "," + convertToText(dataValidTime)
