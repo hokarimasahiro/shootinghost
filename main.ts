@@ -1,15 +1,49 @@
+function commandSend () {
+    sendStrings = "" + targetList._pickRandom() + "," + "S" + "," + convertToText(waitTime) + "," + convertToText(dataValidTime)
+    radio.sendString(sendStrings)
+    serial.writeLine(sendStrings)
+}
+function dispRestTime (restTime: number) {
+    if (restTime >= 5) {
+        watchfont.plot(2, 0)
+    }
+    if (restTime >= 4) {
+        watchfont.plot(2, 1)
+    }
+    if (restTime >= 3) {
+        watchfont.plot(2, 2)
+    }
+    if (restTime >= 2) {
+        watchfont.plot(2, 3)
+    }
+    if (restTime >= 1) {
+        watchfont.plot(2, 4)
+    }
+}
 function responsProc () {
     if (receivedCommand[1].charAt(0) == "H") {
         point += 1
-        watchfont.showNumber2(point)
+        nextTime = input.runningTime() + intervalTime
     }
 }
 input.onButtonPressed(Button.A, function () {
-    if (targetList.length >= 0) {
-        mode = 1
+    mode = 0
+    if (targetList.length > 0) {
         radio.setGroup(radioGroup)
+        for (let カウンター = 0; カウンター <= 3; カウンター++) {
+            basic.showNumber(3 - カウンター)
+            basic.pause(1000)
+        }
+        nextTime = input.runningTime()
+        endTime = input.runningTime() + gameTime
         serial.writeLine("start")
-        watchfont.showNumber2(0)
+        point = 0
+        watchfont.showNumber2(point)
+        mode = 1
+    } else {
+        basic.showIcon(IconNames.Confused)
+        basic.pause(1000)
+        watchfont.showNumber2(radioGroup)
     }
 })
 function initProc () {
@@ -44,26 +78,48 @@ function CQreceiveProc () {
         serial.writeLine("target add " + receivedCommand[1])
     }
 }
-let sendStrings = ""
+let endTime = 0
 let mode = 0
-let targetList: string[] = []
+let nextTime = 0
 let point = 0
 let receivedCommand: string[] = []
+let targetList: string[] = []
+let sendStrings = ""
 let radioGroup = 0
+let gameTime = 0
+let dataValidTime = 0
+let intervalTime = 0
+let waitTime = 0
 serial.redirectToUSB()
 serial.setTxBufferSize(128)
 serial.setRxBufferSize(128)
-let waitTime = 3000
-let dataValidTime = 5
+serial.writeLine("reboot")
+waitTime = 3000
+intervalTime = 1000
+dataValidTime = 5
+gameTime = 30000
 radioGroup = Math.abs(control.deviceSerialNumber()) % 98 + 1
 resetProc()
 initProc()
 basic.forever(function () {
-    if (mode != 0) {
-        sendStrings = "" + targetList._pickRandom() + "," + "S" + "," + convertToText(waitTime) + "," + convertToText(dataValidTime)
-        radio.sendString(sendStrings)
-        serial.writeLine(sendStrings)
-        basic.pause(waitTime)
+    if (mode == 0) {
+        basic.pause(100)
+    } else if (mode == 2) {
+        watchfont.showNumber2(point)
+        basic.pause(500)
+        basic.clearScreen()
+        basic.pause(500)
+    } else {
+        watchfont.showNumber2(point)
+        if (input.runningTime() >= endTime) {
+            mode = 2
+            serial.writeLine("end")
+        } else if (input.runningTime() >= endTime - 6000) {
+            dispRestTime((endTime - input.runningTime()) / 1000)
+        }
+        if (input.runningTime() >= nextTime) {
+            commandSend()
+            nextTime = input.runningTime() + (waitTime + intervalTime)
+        }
     }
-    basic.pause(waitTime)
 })
