@@ -32,6 +32,7 @@ input.onButtonPressed(Button.A, function () {
         radio.setGroup(radioGroup)
         for (let カウンター = 0; カウンター <= 3; カウンター++) {
             watchfont.showNumber2(3 - カウンター)
+            radio.sendString("" + control.deviceName() + "," + "COUNTDOWN" + "," + convertToText(3 - カウンター))
             basic.pause(1000)
         }
         basic.clearScreen()
