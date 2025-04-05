@@ -5,6 +5,10 @@ function commandSend () {
 }
 function dispRestTime (restTime: number) {
     if (restTime <= 5000) {
+        if (toneDown != Math.trunc(restTime / 1000)) {
+            music.play(music.tonePlayable(440, music.beat(BeatFraction.Half)), music.PlaybackMode.InBackground)
+            toneDown = Math.trunc(restTime / 1000)
+        }
         if (restTime >= 4000) {
             watchfont.plot(2, 0)
         }
@@ -18,6 +22,8 @@ function dispRestTime (restTime: number) {
             watchfont.plot(2, 3)
         }
         watchfont.plot(2, 4)
+    } else {
+        toneDown = 5
     }
 }
 function responsProc () {
@@ -86,6 +92,7 @@ let mode = 0
 let nextTime = 0
 let point = 0
 let receivedCommand: string[] = []
+let toneDown = 0
 let targetList: string[] = []
 let sendStrings = ""
 let radioGroup = 0
@@ -116,6 +123,7 @@ basic.forever(function () {
         watchfont.showNumber2(point)
         if (input.runningTime() - endTime >= 0) {
             mode = 2
+            music.play(music.tonePlayable(784, music.beat(BeatFraction.Breve)), music.PlaybackMode.InBackground)
             serial.writeLine("end")
         } else {
             dispRestTime(endTime - input.runningTime())
