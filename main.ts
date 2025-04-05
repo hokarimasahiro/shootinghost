@@ -4,19 +4,19 @@ function commandSend () {
     serial.writeLine(sendStrings)
 }
 function dispRestTime (restTime: number) {
-    if (restTime >= 5) {
-        watchfont.plot(2, 0)
-    }
-    if (restTime >= 4) {
-        watchfont.plot(2, 1)
-    }
-    if (restTime >= 3) {
-        watchfont.plot(2, 2)
-    }
-    if (restTime >= 2) {
-        watchfont.plot(2, 3)
-    }
-    if (restTime >= 1) {
+    if (restTime <= 5000) {
+        if (restTime >= 4000) {
+            watchfont.plot(2, 0)
+        }
+        if (restTime >= 3000) {
+            watchfont.plot(2, 1)
+        }
+        if (restTime >= 2000) {
+            watchfont.plot(2, 2)
+        }
+        if (restTime >= 1000) {
+            watchfont.plot(2, 3)
+        }
         watchfont.plot(2, 4)
     }
 }
@@ -31,9 +31,10 @@ input.onButtonPressed(Button.A, function () {
     if (targetList.length > 0) {
         radio.setGroup(radioGroup)
         for (let カウンター = 0; カウンター <= 3; カウンター++) {
-            basic.showNumber(3 - カウンター)
+            watchfont.showNumber2(3 - カウンター)
             basic.pause(1000)
         }
+        basic.clearScreen()
         nextTime = input.runningTime()
         endTime = input.runningTime() + gameTime
         serial.writeLine("start")
@@ -111,15 +112,15 @@ basic.forever(function () {
         basic.pause(500)
     } else {
         watchfont.showNumber2(point)
-        if (input.runningTime() >= endTime) {
+        if (input.runningTime() - endTime >= 0) {
             mode = 2
             serial.writeLine("end")
-        } else if (input.runningTime() >= endTime - 6000) {
-            dispRestTime((endTime - input.runningTime()) / 1000)
-        }
-        if (input.runningTime() >= nextTime) {
-            commandSend()
-            nextTime = input.runningTime() + (waitTime + intervalTime)
+        } else {
+            dispRestTime(endTime - input.runningTime())
+            if (input.runningTime() >= nextTime) {
+                commandSend()
+                nextTime = input.runningTime() + (waitTime + intervalTime)
+            }
         }
     }
 })
