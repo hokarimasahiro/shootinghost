@@ -35,6 +35,7 @@ input.onButtonPressed(Button.A, function () {
             radio.sendString("" + control.deviceName() + "," + "COUNTDOWN" + "," + convertToText(3 - カウンター))
             basic.pause(1000)
         }
+        radio.sendString("" + control.deviceName() + "," + "CLEAR")
         basic.clearScreen()
         nextTime = input.runningTime()
         endTime = input.runningTime() + gameTime
