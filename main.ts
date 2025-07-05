@@ -37,6 +37,11 @@ input.onButtonPressed(Button.A, function () {
     if (targetList.length > 0) {
         radio.setGroup(radioGroup)
         for (let カウンター = 0; カウンター <= 3; カウンター++) {
+            if (カウンター == 3) {
+                music.play(music.tonePlayable(880, music.beat(BeatFraction.Double)), music.PlaybackMode.InBackground)
+            } else {
+                music.play(music.tonePlayable(440, music.beat(BeatFraction.Whole)), music.PlaybackMode.InBackground)
+            }
             watchfont.showNumber2(3 - カウンター)
             radio.sendString("" + control.deviceName() + "," + "COUNTDOWN" + "," + convertToText(3 - カウンター))
             basic.pause(1000)
