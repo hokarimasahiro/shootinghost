@@ -9,19 +9,6 @@ function dispRestTime (restTime: number) {
             music.play(music.tonePlayable(440, music.beat(BeatFraction.Half)), music.PlaybackMode.InBackground)
             toneDown = Math.trunc(restTime / 1000)
         }
-        if (restTime >= 4000) {
-            watchfont.plot(2, 0)
-        }
-        if (restTime >= 3000) {
-            watchfont.plot(2, 1)
-        }
-        if (restTime >= 2000) {
-            watchfont.plot(2, 2)
-        }
-        if (restTime >= 1000) {
-            watchfont.plot(2, 3)
-        }
-        watchfont.plot(2, 4)
     } else {
         toneDown = 5
     }
@@ -42,7 +29,7 @@ input.onButtonPressed(Button.A, function () {
             } else {
                 music.play(music.tonePlayable(440, music.beat(BeatFraction.Whole)), music.PlaybackMode.InBackground)
             }
-            watchfont.showNumber2(3 - カウンター)
+            watchfont.showNumber(3 - カウンター)
             radio.sendString("" + control.deviceName() + "," + "COUNTDOWN" + "," + convertToText(3 - カウンター))
             basic.pause(1000)
         }
@@ -52,7 +39,7 @@ input.onButtonPressed(Button.A, function () {
         endTime = input.runningTime() + gameTime
         serial.writeLine("start")
         point = 0
-        watchfont.showNumber2(point)
+        watchfont.showNumber(point)
         mode = 1
     } else {
         basic.showIcon(IconNames.Confused)
@@ -120,12 +107,12 @@ basic.forever(function () {
     if (mode == 0) {
         basic.pause(100)
     } else if (mode == 2) {
-        watchfont.showNumber2(point)
+        watchfont.showNumber(point)
         basic.pause(500)
         basic.clearScreen()
         basic.pause(500)
     } else {
-        watchfont.showNumber2(point)
+        watchfont.showNumber(point)
         if (input.runningTime() - endTime >= 0) {
             mode = 2
             music.play(music.tonePlayable(784, music.beat(BeatFraction.Breve)), music.PlaybackMode.InBackground)
