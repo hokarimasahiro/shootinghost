@@ -35,7 +35,7 @@ input.onButtonPressed(Button.A, function () {
         }
         radio.sendString("" + control.deviceName() + "," + "CLEAR")
         basic.clearScreen()
-        nextTime = input.runningTime()
+        nextTime = input.runningTime() + 100
         endTime = input.runningTime() + gameTime
         serial.writeLine("start")
         point = 0
