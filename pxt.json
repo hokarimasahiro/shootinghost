@@ -5,7 +5,7 @@
         "core": "*",
         "radio": "*",
         "microphone": "*",
-        "pxt-watchfont": "github:hokarimasahiro/pxt-watchfont#0ce0efb34c7a3b61cb62e9c6803427a975555223"
+        "pxt-watchfont": "github:hokarimasahiro/pxt-watchfont#b366f6d31f0d69001e2c769bf2189841dccb7f7a"
     },
     "files": [
         "main.blocks",
